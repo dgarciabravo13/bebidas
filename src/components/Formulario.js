@@ -1,28 +1,32 @@
-import React, {useContext, useState} from "react";
-import {CategoriasContext} from "../context/CategoriasContext";
+import React, { useContext, useState } from "react";
+import { CategoriasContext } from "../context/CategoriasContext";
+import { RecetasContext } from "../context/RecetasContext";
 
 const Formulario = () => {
-
   const [busqueda, guardarBusqueda] = useState({
-    nombre:"",
-    categoria:""
-  })
+    nombre: "",
+    categoria: "",
+  });
 
-  const {categorias} = useContext(CategoriasContext);
+  const { categorias } = useContext(CategoriasContext);
+  const {buscarRecetas} = useContext(RecetasContext);
 
   //funcion para leer los contenidos
 
-  const obtenerDatosReceta = e => {
-
+  const obtenerDatosReceta = (e) => {
     guardarBusqueda({
-      ...busqueda, [e.target.name]:e.target.value
-    })
-    
-  }
-  
+      ...busqueda,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
-    <form className="col-12">
+    <form 
+    className="col-12" 
+    onSubmit={e =>{
+      e.preventDefault();
+      buscarRecetas(busqueda)
+      }}>
       <fieldset className="text-center">
         <legend>Busca bebidas por categoría o ingrediente</legend>
       </fieldset>
@@ -37,12 +41,17 @@ const Formulario = () => {
           />
         </div>
         <div className="col-md-4">
-          <select className="form-control" name="categoria" onChange={obtenerDatosReceta}>
+          <select
+            className="form-control"
+            name="categoria"
+            onChange={obtenerDatosReceta}
+          >
             <option value="">--Seleccione Categoría--</option>
-            {categorias.map((categoria,i) =>(
-              <option key={i} value={categoria.strCategory}>{categoria.strCategory}</option>
+            {categorias.map((categoria, i) => (
+              <option key={i} value={categoria.strCategory}>
+                {categoria.strCategory}
+              </option>
             ))}
-
           </select>
         </div>
         <div className="col-md-4">
