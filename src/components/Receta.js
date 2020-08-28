@@ -18,7 +18,7 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: "absolute",
-    width: 600,
+    width: 400,
     backgroundColor: theme.palette.background.paper,
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
@@ -41,7 +41,21 @@ const Receta = ({ receta }) => {
   };
 
   //extraer los valores del context
-  const { guardarIdReceta } = useContext(ModalContext);
+  const { informacion, guardarIdReceta, guardarReceta } = useContext(
+    ModalContext
+  );
+
+  const mostrarIngredientes = (informacion) => {
+    let ingredientes = [];
+    for(let i = 1; i < 16; i++ ){
+      if(informacion[`strIngredient${i}`]){
+        ingredientes.push(
+        <li>{informacion[`strIngredient${i}`]} {informacion[`strMeasure${i}`]}</li>
+        )
+      }
+    }
+    return ingredientes;
+  }
 
   return (
     <div className="col-md-4 mb-3">
@@ -66,12 +80,24 @@ const Receta = ({ receta }) => {
           <Modal
             open={open}
             onClose={() => {
+              guardarReceta({});
               guardarIdReceta(null);
               handleClose();
             }}
           >
             <div style={modalStyle} className={classes.paper}>
-              <h1>Desde modal</h1>
+              <h2>{informacion.strDrink}</h2>
+              <h3 className="mt-4">Instrucciones</h3>
+              <p>{informacion.strInstructions}</p>
+              <img
+                className="img-fluid my-4"
+                src={informacion.strDrinkThumb}
+                alt="Imagen bebida"
+              />
+              <h3>Mostrar Ingredientes y Cantidades</h3>
+              <ul>
+                {mostrarIngredientes(informacion)}
+              </ul>
             </div>
           </Modal>
         </div>
